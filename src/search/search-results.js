@@ -3,26 +3,20 @@ import axios from "axios";
 import { useDebounce } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
 
-export const SEARCH_TYPE = {
-  FUZZY: "fuzzy",
-  SEMANTIC: "semantic",
-  PARTIAL: "partial",
-};
-
-const search = async ({ term, type }) => {
-  return await axios.get(`/api/${type}`, {
+const search = async ({ term }) => {
+  return await axios.get(`/api/fuzzy`, {
     params: { term: term },
   });
 };
 
-export default function SearchResults({ term, type }) {
+export default function SearchResults({ term }) {
   const debouncedTerm = useDebounce(term, 500);
 
   const query = useQuery({
-    queryKey: ["search", type, debouncedTerm],
+    queryKey: ["search", debouncedTerm],
     queryFn: async () => {
       if (!debouncedTerm) return { data: [] };
-      return await search({ term: debouncedTerm, type: type });
+      return await search({ term: debouncedTerm });
     },
     select: (response) => response.data,
     keepPreviousData: true,

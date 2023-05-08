@@ -1,7 +1,7 @@
 {
   "name": "demo",
   "version": "1.0.0",
-  "description": "Xata Search Three Ways",
+  "description": "Xata Fuzzy Search with Booster Demo",
   "author": "@raae",
   "keywords": [
     "gatsby"
