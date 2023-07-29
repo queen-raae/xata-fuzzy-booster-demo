@@ -9,7 +9,19 @@ body {
 }
 
 main {
-  @apply mx-auto py-8 max-w-5xl grid gap-3 grid-cols-1;
+  @apply px-3;
+  @apply mx-auto py-8 grid gap-3 grid-cols-1;
+}
+main:has(> *:nth-child(4)) {
+  @apply grid-cols-2;
+}
+
+main:has(> *:nth-child(6)) {
+  @apply grid-cols-3;
+}
+
+main:has(> *:nth-child(8)) {
+  @apply grid-cols-4;
 }
 
 main > form {

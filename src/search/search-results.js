@@ -3,20 +3,21 @@ import axios from "axios";
 import { useDebounce } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
 
-const search = async ({ term }) => {
-  return await axios.get(`/api/fuzzy`, {
-    params: { term: term },
+const search = async ({ term, booster }) => {
+  const endpoint = booster ? `/api/fuzzy/${booster}` : "/api/fuzzy";
+  return await axios.get(endpoint, {
+    params: { term: term, booster: booster },
   });
 };
 
-export default function SearchResults({ term }) {
+export default function SearchResults({ term, booster }) {
   const debouncedTerm = useDebounce(term, 500);
 
   const query = useQuery({
-    queryKey: ["search", debouncedTerm],
+    queryKey: ["search", booster, debouncedTerm],
     queryFn: async () => {
       if (!debouncedTerm) return { data: [] };
-      return await search({ term: debouncedTerm });
+      return await search({ term: debouncedTerm, booster: booster });
     },
     select: (response) => response.data,
     keepPreviousData: true,
@@ -33,7 +34,7 @@ export default function SearchResults({ term }) {
         </li>
       )}
 
-      {(results || []).map(({ record, highlight }) => {
+      {(results || []).map(({ record, highlight, score }) => {
         return (
           <li key={record.username}>
             <a href={`http://twitter.com/${record.username}`}>
@@ -57,8 +58,7 @@ export default function SearchResults({ term }) {
               <hr />
               <p
                 dangerouslySetInnerHTML={{
-                  __html:
-                    highlight?.meta?.description || record.meta.description,
+                  __html: highlight?.description || record.description,
                 }}
               />
               {record.meta.location && (
@@ -66,11 +66,22 @@ export default function SearchResults({ term }) {
                   <strong>Location: </strong>
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: highlight?.meta?.location || record.meta.location,
+                      __html: highlight?.location || record.location,
                     }}
                   />
                 </p>
               )}
+              <hr />
+              <p>
+                <strong>Followers: </strong>
+                <span>{record.followers_count.toLocaleString("en")}</span>
+                <br />
+                <strong>On Twitter since: </strong>
+                <span>{new Date(record.created_at).toDateString()}</span>
+                <br />
+                <strong>Score: </strong>
+                <span>{score.toLocaleString("en")}</span>
+              </p>
             </a>
           </li>
         );

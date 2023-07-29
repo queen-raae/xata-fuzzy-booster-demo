@@ -9,17 +9,8 @@ export default function PlainTextPage() {
     <main>
       <SearchForm onTermChange={setTerm} term={term} />
 
-      <h2>Baseline</h2>
-      <SearchResults term={term} />
-
-      <h2>Boost Username/Name</h2>
-      <SearchResults term={term} booster="columns" />
-
-      <h2>Boost Popular</h2>
+      <h2>Numerical Booster</h2>
       <SearchResults term={term} booster="numerical" />
-
-      <h2>Boost Oldtimers</h2>
-      <SearchResults term={term} booster="date" />
     </main>
   );
 }

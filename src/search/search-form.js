@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SearchForm({ term, onTermChange }) {
+export default function SearchForm({ term, onTermChange, onPrefixChange }) {
   return (
     <form onSubmit={(event) => event.preventDefault()}>
       <label htmlFor="search-field">Search accounts: </label>

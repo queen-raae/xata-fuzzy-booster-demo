@@ -1,4 +1,4 @@
-import { getXataClient } from "../../xata";
+import { getXataClient } from "../../../xata";
 
 const xata = getXataClient();
 
@@ -9,12 +9,15 @@ export default async function handler(req, res) {
     tables: [
       {
         table: "accounts",
-        target: ["name", "username", "meta.description", "meta.location"],
+        target: [
+          { column: "name" },
+          { column: "username" },
+          { column: "description" },
+          { column: "location" },
+        ],
       },
     ],
-    page: { size: 20 },
-    // fuzziness: 1,
-    // prefix: "phrase",
+    prefix: "phrase",
   });
 
   results = results.map((result) => {
@@ -22,6 +25,7 @@ export default async function handler(req, res) {
     return {
       record: result.record,
       highlight: metadata.highlight,
+      score: metadata.score,
     };
   });
 
